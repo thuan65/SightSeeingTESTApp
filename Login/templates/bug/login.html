@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocaGo! - Đăng nhập / Đăng ký</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --main-color: #1C6758;
+            --secondary-color: #8EB486;
+            --transition-time: 0.8s;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--main-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            min-height: 550px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* FORMS CONTAINER */
+        .forms-container {
+            position: relative;
+            grid-column: 1 / 2;
+            grid-row: 1 / 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        .form-wrapper {
+            width: 100%;
+            max-width: 380px;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .form-wrapper.hidden {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        .title {
+            font-size: 2rem;
+            color: var(--main-color);
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .input-field {
+            width: 100%;
+            height: 50px;
+            background: #f0f0f0;
+            margin: 12px 0;
+            border-radius: 50px;
+            display: grid;
+            grid-template-columns: 15% 85%;
+            padding: 0 0.4rem;
+            transition: background 0.3s;
+        }
+
+        .input-field:focus-within {
+            background: #e8e8e8;
+        }
+
+        .input-field i {
+            text-align: center;
+            line-height: 50px;
+            color: var(--main-color);
+            font-size: 1.1rem;
+        }
+
+        .input-field input {
+            background: none;
+            outline: none;
+            border: none;
+            line-height: 1;
+            font-weight: 500;
+            font-size: 1rem;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .input-field input::placeholder {
+            color: #999;
+        }
+
+        .btn {
+            width: 100%;
+            height: 48px;
+            border: none;
+            outline: none;
+            border-radius: 48px;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--main-color), var(--secondary-color));
+            color: white;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin: 15px 0;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 15px rgba(28, 103, 88, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(28, 103, 88, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .link-text {
+            padding: 0.7rem 0;
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+        }
+
+        .link-text a {
+            color: var(--main-color);
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .link-text a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* PANELS CONTAINER */
+        .panels-container {
+            position: relative;
+            grid-column: 2 / 3;
+            grid-row: 1 / 2;
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        .panel {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow: hidden;
+            transition: all var(--transition-time) ease-in-out;
+        }
+
+        .panel.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Slideshow */
+        .slideshow-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .slideshow-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .slideshow-slide.active {
+            opacity: 1;
+        }
+
+        .slideshow-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(28, 103, 88, 0.75);
+            z-index: 2;
+        }
+
+        .slideshow-content {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+            max-width: 350px;
+        }
+
+        .panel h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .panel p {
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .panel .btn {
+            background: transparent;
+            border: 2px solid white;
+            width: 150px;
+        }
+
+        .panel .btn:hover {
+            background: white;
+            color: var(--main-color);
+        }
+
+        /* SIGN UP MODE - Đảo ngược layout */
+        .container.sign-up-mode {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .container.sign-up-mode .forms-container {
+            grid-column: 2 / 3;
+        }
+
+        .container.sign-up-mode .panels-container {
+            grid-column: 1 / 2;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr !important;
+                min-height: 700px;
+            }
+
+            .forms-container {
+                grid-column: 1 / 2 !important;
+                padding: 30px 20px;
+            }
+
+            .panels-container {
+                display: none;
+            }
+
+            .title {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 15px;
+            }
+
+            .form-wrapper {
+                max-width: 100%;
+            }
+
+            .input-field {
+                height: 45px;
+            }
+
+            .input-field i {
+                line-height: 45px;
+                font-size: 1rem;
+            }
+
+            .input-field input {
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                height: 45px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        
+        <!-- FORMS -->
+        <div class="forms-container">
+            <!-- SIGN IN FORM -->
+            <div class="form-wrapper" id="signInForm">
+                <form method="POST" action="{{ url_for('login_bp.login') }}">
+                    <h2 class="title">Welcome back!</h2>
+                    
+                    <div class="input-field">
+                        <i class="fas fa-user"></i>
+                        <input type="text" placeholder="Tên đăng nhập" name="username" required />
+                    </div>
+                    
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Mật khẩu" name="password" required />
+                    </div>
+
+                    <button type="submit" class="btn">Đăng nhập</button>
+
+                    <p class="link-text">
+                        Chưa có tài khoản? <a href="#" class="switch-to-signup">Đăng ký ngay</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- SIGN UP FORM -->
+            <div class="form-wrapper hidden" id="signUpForm">
+                <form method="POST" action="{{ url_for('login_bp.register') }}">
+                    <h2 class="title">Tạo tài khoản</h2>
+
+                    <div class="input-field">
+                        <i class="fas fa-user"></i>
+                        <input type="text" placeholder="Tên đăng nhập" name="username" required />
+                    </div>
+
+                    <div class="input-field">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" placeholder="Email" name="email" required />
+                    </div>
+                    
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Mật khẩu" name="password" required />
+                    </div>
+                    
+                    <div class="input-field">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Xác nhận mật khẩu" name="confirm_password" required />
+                    </div>
+
+                    <button type="submit" class="btn">Đăng ký</button>
+
+                    <p class="link-text">
+                        Đã có tài khoản? <a href="#" class="switch-to-signin">Đăng nhập</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+
+        <!-- PANELS -->
+        <div class="panels-container">
+            <!-- PANEL cho màn hình đăng nhập (bên phải) -->
+            <div class="panel" id="signUpPanel">
+                <div class="slideshow-wrapper" id="slideshowSignUp">
+                    <div class="slideshow-slide active" style="background-image: url('https://images.unsplash.com/photo-1528127269322-539801943592?w=1920');"></div>
+                    <div class="slideshow-slide" style="background-image: url('https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=1920');"></div>
+                    <div class="slideshow-slide" style="background-image: url('https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=1920');"></div>
+                    <div class="slideshow-slide" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920');"></div>
+                </div>
+                <div class="slideshow-overlay"></div>
+                <div class="slideshow-content">
+                    <h3>Xin chào bạn!</h3>
+                    <p>Đăng ký với thông tin cá nhân của bạn để sử dụng tất cả các tính năng của trang web</p>
+                    <button class="btn transparent" id="goToSignUp">
+                        Đăng ký
+                    </button>
+                </div>
+            </div>
+
+            <!-- PANEL cho màn hình đăng ký (bên trái) -->
+            <div class="panel hidden" id="signInPanel">
+                <div class="slideshow-wrapper" id="slideshowSignIn">
+                    <div class="slideshow-slide active" style="background-image: url('https://images.unsplash.com/photo-1549488349-e16e0fdd21f6?w=1920');"></div>
+                    <div class="slideshow-slide" style="background-image: url('https://images.unsplash.com/photo-1534430267215-cf6a1d821360?w=1920');"></div>
+                    <div class="slideshow-slide" style="background-image: url('https://images.unsplash.com/photo-1508928014526-70e6c52a0951?w=1920');"></div>
+                    <div class="slideshow-slide" style="background-image: url('https://images.unsplash.com/photo-1517454228919-813d1000632b?w=1920');"></div>
+                </div>
+                <div class="slideshow-overlay"></div>
+                <div class="slideshow-content">
+                    <h3>Welcome Back!</h3>
+                    <p>Bạn đã có tài khoản rồi chứ? Đăng nhập để tiếp tục khám phá!</p>
+                    <button class="btn transparent" id="goToSignIn">
+                        Đăng nhập
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const container = document.getElementById('mainContainer');
+        const signInForm = document.getElementById('signInForm');
+        const signUpForm = document.getElementById('signUpForm');
+        const signInPanel = document.getElementById('signInPanel');
+        const signUpPanel = document.getElementById('signUpPanel');
+        
+        const goToSignUp = document.getElementById('goToSignUp');
+        const goToSignIn = document.getElementById('goToSignIn');
+        const switchToSignup = document.querySelector('.switch-to-signup');
+        const switchToSignin = document.querySelector('.switch-to-signin');
+
+        // Chuyển sang chế độ đăng ký
+        function showSignUpMode() {
+            container.classList.add('sign-up-mode');
+            
+            // Ẩn form đăng nhập, hiện form đăng ký
+            signInForm.classList.add('hidden');
+            signUpForm.classList.remove('hidden');
+            
+            signUpPanel.classList.add('hidden');
+            signInPanel.classList.remove('hidden');
+        }
+
+        // Chuyển về chế độ đăng nhập
+        function showSignInMode() {
+            container.classList.remove('sign-up-mode');
+            
+            // Hiện form đăng nhập, ẩn form đăng ký
+            signInForm.classList.remove('hidden');
+            signUpForm.classList.add('hidden');
+            
+            signUpPanel.classList.remove('hidden');
+            signInPanel.classList.add('hidden');
+        }
+
+        // Event listeners
+        goToSignUp.addEventListener('click', showSignUpMode);
+        goToSignIn.addEventListener('click', showSignInMode);
+        switchToSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSignUpMode();
+        });
+        switchToSignin.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSignInMode();
+        });
+
+        // Slideshow
+        function initSlideshow(wrapperId) {
+            let currentSlide = 0;
+            const slides = document.querySelectorAll(`#${wrapperId} .slideshow-slide`);
+
+            function nextSlide() {
+                if (slides.length === 0) return;
+
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+
+            setInterval(nextSlide, 4000);
+        }
+
+        // Khởi tạo Slideshow cho cả hai panel
+        initSlideshow('slideshowSignUp');
+        initSlideshow('slideshowSignIn');
+    </script>
+</body>
+</html>
